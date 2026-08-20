@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { cn } from "../../lib/cn";
 import { Text, TextInput, TextInputProps, View } from "react-native";
 type CampoTextoProps = TextInputProps & {
+  label?: string,
   regex: RegExp;
   errorMessage: string;
   placeholder?: string;
@@ -11,6 +12,7 @@ type CampoTextoProps = TextInputProps & {
 };
 
 const CampoTextoGenerico = ({
+  label = "",
   regex,
   errorMessage,
   className = "",
@@ -33,10 +35,9 @@ const CampoTextoGenerico = ({
   };
 
   return (
-    <View className={cn("bg-[#ffff] w-72 items-center gap-1 ", className)}>
-      <Text className={cn("text-black", labelClassName)}></Text>
+    <View className={cn("bg-white items-center", className)}>
       <TextInput
-        className={cn("text-black ", textInputClassName)}
+        className={cn("text-black w-72 px-4 ", textInputClassName)}
         placeholder={placeholder}
         value={campo}
         onChangeText={handleChange}

@@ -11,7 +11,7 @@ const Botao = ({ className = "", children, ...props }: BotaoProps) => {
       )}
       {...props}
     >
-      <Text className="">{children}</Text>
+    {children}
     </Pressable>
   );
 };
