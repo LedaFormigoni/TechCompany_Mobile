@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 
 import "../global.css";
 
@@ -16,8 +16,10 @@ import Footer from "@/components/Footer/footer";
 import { BasicSignin } from "@/service/user.service";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, useRouter } from "expo-router";
 
 const App = () => {
+  const router = useRouter();
   // Estados dos campos
   const [email, setEmail] = useState<string>("");
   const [senha, setSenha] = useState<string>("");
@@ -26,8 +28,7 @@ const App = () => {
   const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Estado de erro do e-mail
-  const [isErrorInEmail, setIsErrorInEmail] =
-    useState<boolean>(false);
+  const [isErrorInEmail, setIsErrorInEmail] = useState<boolean>(false);
 
   // Validação do e-mail
   useEffect(() => {
@@ -43,12 +44,10 @@ const App = () => {
   }, [email]);
 
   // Regex da senha
-  const regex_senha =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  const regex_senha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
   // Estado de erro da senha
-  const [isErrorInSenha, setIsErrorInSenha] =
-    useState<boolean>(false);
+  const [isErrorInSenha, setIsErrorInSenha] = useState<boolean>(false);
 
   // Validação da senha
   useEffect(() => {
@@ -64,17 +63,15 @@ const App = () => {
   }, [senha]);
 
   // Função de login
-  const onSubmit = async (
-    email: string,
-    senha: string
-  ) => {
+  const onSubmit = async (email: string, senha: string) => {
     try {
       const resposta = await BasicSignin(email, senha);
-
+      console.log("Email:", email);
+      console.log("Senha:", senha);
       if (resposta === 200) {
-        console.log("Bem vindo");
+        router.navigate("/Home");
       } else {
-        console.error("E-mail ou senha incorretos");
+        Alert.alert("Usuario ou senha incorretos");
       }
     } catch (error) {
       console.error("Erro ao realizar login:", error);
@@ -83,19 +80,12 @@ const App = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#0007a0]">
-      <Header />
-
       <View className="flex-1 justify-center items-center bg-[#0007a0]">
-        
         {/* Título */}
         <View className="justify-center items-center mt-8 mb-6">
-          <Text className="text-4xl text-white">
-            Entrar
-          </Text>
+          <Text className="text-4xl text-white">Entrar</Text>
 
-          <Text className="text-xl text-white">
-            Entre com sua conta
-          </Text>
+          <Text className="text-xl text-white">Entre com sua conta</Text>
         </View>
 
         {/* Campos */}
@@ -103,13 +93,7 @@ const App = () => {
           {/* E-mail */}
           <CampoTextoGenerico
             className="bg-white rounded-lg"
-            icone={
-              <FontAwesome
-                name="user-circle"
-                color="#321abf"
-                size={24}
-              />
-            }
+            icone={<FontAwesome name="user-circle" color="#321abf" size={24} />}
             value={email}
             setValue={setEmail}
             errorMessage="Seu e-mail está inválido"
@@ -122,13 +106,7 @@ const App = () => {
           {/* Senha */}
           <CampoTextoGenerico
             className="bg-white rounded-lg"
-            icone={
-              <Ionicons
-                name="lock-closed"
-                color="#321abf"
-                size={24}
-              />
-            }
+            icone={<Ionicons name="lock-closed" color="#321abf" size={24} />}
             value={senha}
             setValue={setSenha}
             errorMessage="Digite uma senha válida"
@@ -144,25 +122,23 @@ const App = () => {
           <Botao
             className="w-20"
             disabled={
-              isErrorInEmail ||
-              isErrorInSenha ||
-              email === "" ||
-              senha === ""
+              isErrorInEmail || isErrorInSenha || email === "" || senha === ""
             }
             onPress={() => onSubmit(email, senha)}
           >
             <View className="justify-center items-center">
-              <Text className="text-white text-xl">
-                Entrar
-              </Text>
+              <Text className="text-white text-xl">Entrar</Text>
             </View>
           </Botao>
         </View>
 
         {/* Cadastro */}
-        <Text className="text-white text-base mt-4">
-          Não possui cadastro? Cadastrar
-        </Text>
+        <View className="flex-row items-center gap-2 ">
+          <Text className="text-white text-base mt-4">
+            Não possui cadastro?
+          </Text>
+        <Link href={"/Cadastro"} className=" text-white text-base underline pt-4">Cadastre-se</Link>
+        </View>
       </View>
 
       <Footer />
