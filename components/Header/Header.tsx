@@ -1,18 +1,27 @@
-import { View, Text, Image } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Entypo from "@expo/vector-icons/Entypo";
-
-export default function Header() {
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import Feather from "@expo/vector-icons/Feather";
+import React from "react";
+import { Image, Pressable, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+const Header = (props: NativeStackHeaderProps) => {
+  const podeVoltar = props.navigation.canGoBack();
   return (
-    <>
-      <View className="w-full h-[100px] bg-[#00007a] flex-row items-center justify-between p-5 pt-10">
-        <Entypo name="home" size={35} color="white" />
-        <Image source={require("@/assets/images/logoTech.png")} className="w-[200px] h-[100px]" />
-        <Ionicons name="menu" size={35} color="white" />
+    <SafeAreaView
+      className={`px-6 pt-2 bg-[#00007a] flex-row items-center gap-6 ${podeVoltar == false && "justify-center"}`}
+    >
+      {podeVoltar == true ? (
+        <Pressable onPress={() => props.navigation.goBack()}>
+          <Feather name="arrow-left" size={24} color="black" />
+        </Pressable>
+      ) : null}
+      <View className="pt-2">
+      <Image
+        className={`h-10 w-28  ${podeVoltar == true && "ml-[75px]"}`}
+        source={require("@/assets/images/logoTech.png")}
+        style={{ resizeMode: "cover" }}
+      />
       </View>
-      <View className="h-8 w-50 bg-[#110991]">
-        <Text></Text>
-      </View>
-    </>
+    </SafeAreaView>
   );
-}
+};
+export default Header;
