@@ -6,7 +6,7 @@ const Botao = ({ className = "", children, ...props }: BotaoProps) => {
   return (
     <Pressable
       className={cn(
-        "",
+        "bg-indigo-500 rounded-2xl  h-10 w-20 flex justify-center items-center m-5",
         className
       )}
       {...props}
