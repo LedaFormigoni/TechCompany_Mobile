@@ -11,7 +11,7 @@ const Header = (props: NativeStackHeaderProps) => {
     >
       {podeVoltar == true ? (
         <Pressable onPress={() => props.navigation.goBack()}>
-          <Feather name="arrow-left" size={24} color="black" />
+          <Feather name="arrow-left" size={24} color="white" />
         </Pressable>
       ) : null}
       <View className="pt-2">
