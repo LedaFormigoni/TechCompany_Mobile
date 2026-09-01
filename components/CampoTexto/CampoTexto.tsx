@@ -11,7 +11,7 @@ import {
 
 type CampoTextoProps = TextInputProps & {
   label?: string;
-  regex: RegExp;
+  regex?: RegExp;
   errorMessage: string;
   placeholder?: string;
   className?: string;
