@@ -17,6 +17,8 @@ import { BasicSignin } from "@/service/user.service";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const App = () => {
   const router = useRouter();
@@ -64,19 +66,19 @@ const App = () => {
 
   // Função de login
   const onSubmit = async (email: string, senha: string) => {
-    try {
-      const resposta = await BasicSignin(email, senha);
-      console.log("Email:", email);
-      console.log("Senha:", senha);
-      if (resposta === 200) {
-        router.navigate("/Home");
-      } else {
-        Alert.alert("Usuario ou senha incorretos");
-      }
-    } catch (error) {
-      console.error("Erro ao realizar login:", error);
+  try {
+    const resposta = await BasicSignin(email, senha);
+
+    if (resposta && resposta.status === 200) {
+      await AsyncStorage.setItem('id', String(resposta.data.id_usuario));
+      router.navigate("/Home");
+    } else {
+      Alert.alert("Usuario ou senha incorretos");
     }
-  };
+  } catch (error) {
+    console.error("Erro ao realizar login:", error);
+  }
+};
 
   return (
     <SafeAreaView className="flex-1 bg-[#0007a0]">
