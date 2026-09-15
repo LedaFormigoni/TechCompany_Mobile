@@ -3,10 +3,12 @@ import { Alert, Text, View } from "react-native";
 import CampoTextoGenerico from "@/components/CampoTexto/CampoTexto";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Botao from "@/components/botao/botao";
 import { useRouter } from "expo-router";
 import { CreateAccount } from "@/service/user.service";
+import Footer from "@/components/Footer/footer";
 
 
 const Cadastro = () => {
@@ -100,6 +102,7 @@ const Cadastro = () => {
     };
   
   return (
+    <>
     <View className="p-5 ">
 
       <Text className="text-2xl text-center">Criar Conta</Text>
@@ -120,7 +123,7 @@ const Cadastro = () => {
             {/* E-mail */}
           <CampoTextoGenerico
             className="bg-white rounded-lg"
-            icone={<FontAwesome name="user-circle" color="#321abf" size={24} />}
+            icone={<MaterialIcons name="email" size={24} color="#321abf" />}
             value={email}
             setValue={setEmail}
             errorMessage="Seu e-mail está inválido"
@@ -145,7 +148,7 @@ const Cadastro = () => {
           {/* Endereco */}
           <CampoTextoGenerico
             className="bg-white rounded-lg"
-            icone={<Ionicons name="lock-closed" color="#321abf" size={24} />}
+            icone={<FontAwesome6 name="map-location-dot" size={24} color="#321abf" />}
             value={endereco}
             setValue={setEndereco}
             errorMessage="Digite um endereço válido"
@@ -169,6 +172,8 @@ const Cadastro = () => {
           </Botao>
         </View>
     </View>
+    <Footer/>
+    </>
   );
 };
 
