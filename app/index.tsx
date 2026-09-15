@@ -17,36 +17,38 @@ export default function Inicial() {
           <Image
             source={require("@/assets/images/logoTech.png")}
             resizeMode="contain"
-            className="w-[100px] h-[100px] "
+            className="w-[120px] h-[120px] "
           />
-          <Ionicons name="information-circle-outline" size={30} color="white" />
+          <Ionicons
+            name="information-circle-outline"
+            size={38}
+            color="white"
+            onPress={() => router.push("/Sobrenos")}
+          />
         </View>
-        <Text className="text-7xl text-white">TECH</Text>
+        <View className="p-5 ">
+          <Text className="text-7xl text-white">TECH</Text>
 
-        <MaskedView
-          maskElement={
-            <Text className="text-7xl">
-              COMPANY
-            </Text>
-          }
-        >
-          <LinearGradient
-            colors={["#9658F5", "#4B9BFF"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-          >
-            <Text className="text-7xl opacity-0">COMPANY</Text>
-          </LinearGradient>
-        </MaskedView>
+          <MaskedView maskElement={<Text className="text-7xl">COMPANY</Text>}>
+            <LinearGradient
+              colors={["#9658F5", "#4B9BFF"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <Text className="text-7xl opacity-0">COMPANY</Text>
+            </LinearGradient>
+          </MaskedView>
 
-        <Text className=" text-white">
-          Inovação, qualidade e tecnologia em produtos que transformam o seu dia
-          a dia.
-        </Text>
+         <View className="w-20 h-0.5 bg-[#A855F7] mt-8" />
 
+          <Text className=" text-white mt-6">
+            Inovação, qualidade e tecnologia em produtos que transformam o seu dia
+            a dia.
+          </Text>
+        </View>
         <View className="flex-row mt-96 gap-16 w-full justify-center">
           <Botao
-            className="w-28 h-14 bg-[#010b6b] "
+            className="w-36 h-14 bg-[#010b6b] "
             onPress={() => router.push("/Login")}
           >
             <View className="justify-center items-center flex-row gap-2">
@@ -55,7 +57,7 @@ export default function Inicial() {
             </View>
           </Botao>
           <Botao
-            className="w-34 h-14 bg-transparent border-2 border-white p-2"
+            className="w-36 h-14 bg-transparent border-2 border-white p-2"
             onPress={() => router.push("/Cadastro")}
           >
             <View className="justify-center items-center flex-row gap-1">

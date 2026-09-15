@@ -3,62 +3,61 @@ import { Alert, Text, View } from "react-native";
 import CampoTextoGenerico from "@/components/CampoTexto/CampoTexto";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Botao from "@/components/botao/botao";
 import { useRouter } from "expo-router";
 import { CreateAccount } from "@/service/user.service";
 import Footer from "@/components/Footer/footer";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 const Cadastro = () => {
-    const router = useRouter();
-    // Estados dos campos
-    const [nome, setNome] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [senha, setSenha] = useState<string>("");
-    const [endereco, setEndereco] = useState<string>("");
-  
-    // Regex do e-mail
-    const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-    // Estado de erro do e-mail
-    const [isErrorInEmail, setIsErrorInEmail] = useState<boolean>(false);
-  
-    // Validação do e-mail
-    useEffect(() => {
-      if (email === "") {
+  const router = useRouter();
+  // Estados dos campos
+  const [nome, setNome] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
+  const [endereco, setEndereco] = useState<string>("");
+
+  // Regex do e-mail
+  const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Estado de erro do e-mail
+  const [isErrorInEmail, setIsErrorInEmail] = useState<boolean>(false);
+
+  // Validação do e-mail
+  useEffect(() => {
+    if (email === "") {
+      setIsErrorInEmail(false);
+    } else {
+      if (!regex_email.test(email)) {
+        setIsErrorInEmail(true);
+      } else {
         setIsErrorInEmail(false);
-      } else {
-        if (!regex_email.test(email)) {
-          setIsErrorInEmail(true);
-        } else {
-          setIsErrorInEmail(false);
-        }
       }
-    }, [email]);
-  
-    // Regex da senha
-    const regex_senha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-  
-    // Estado de erro da senha
-    const [isErrorInSenha, setIsErrorInSenha] = useState<boolean>(false);
-  
-    // Validação da senha
-    useEffect(() => {
-      if (senha === "") {
+    }
+  }, [email]);
+
+  // Regex da senha
+  const regex_senha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  // Estado de erro da senha
+  const [isErrorInSenha, setIsErrorInSenha] = useState<boolean>(false);
+
+  // Validação da senha
+  useEffect(() => {
+    if (senha === "") {
+      setIsErrorInSenha(false);
+    } else {
+      if (!regex_senha.test(senha)) {
+        setIsErrorInSenha(true);
+      } else {
         setIsErrorInSenha(false);
-      } else {
-        if (!regex_senha.test(senha)) {
-          setIsErrorInSenha(true);
-        } else {
-          setIsErrorInSenha(false);
-        }
       }
-    }, [senha]);
-  
-    const regex_nome = /^[A-Za-zÀ-ÿ]+(?:\s[A-Za-zÀ-ÿ]+)*$/;
+    }
+  }, [senha]);
+
+  const regex_nome = /^[A-Za-zÀ-ÿ]+(?:\s[A-Za-zÀ-ÿ]+)*$/;
   const [isErrorInNome, setIsErrorInNome] = useState<boolean>(false);
 
   useEffect(() => {
@@ -78,38 +77,45 @@ const Cadastro = () => {
     if (endereco == "") {
       setIsErrorInEmail(false);
     } else {
-        setIsErrorInEndereco(false);
+      setIsErrorInEndereco(false);
     }
   }, [endereco]);
 
-
-    // Função de cadastro
-    const onSubmit = async (nome: string, email: string, senha: string, endereco: string) => {
-      try {
-        const resposta = await CreateAccount(nome, email, senha, endereco);
-        console.log("Nome:", nome);
-        console.log("Email:", email);
-        console.log("Senha:", senha);
-        console.log("Endereco:", endereco);
-        console.log(resposta);
-        if (resposta == 201) {
-          router.navigate("/Home");
-        } else {
-          Alert.alert("Erro ao cadastrar");
-        }
-      } catch (error) {
-        console.error("Erro ao realizar o cadastro:", error);
+  // Função de cadastro
+  const onSubmit = async (
+    nome: string,
+    email: string,
+    senha: string,
+    endereco: string,
+  ) => {
+    try {
+      const resposta = await CreateAccount(nome, email, senha, endereco);
+      console.log("Nome:", nome);
+      console.log("Email:", email);
+      console.log("Senha:", senha);
+      console.log("Endereco:", endereco);
+      console.log(resposta);
+      if (resposta == 201) {
+        router.navigate("/Home");
+      } else {
+        Alert.alert("Erro ao cadastrar");
       }
-    };
-  
+    } catch (error) {
+      console.error("Erro ao realizar o cadastro:", error);
+    }
+  };
+
   return (
-    <SafeAreaView className="flex-1 mt-14">
-    <View className="p-5 ">
-      <View className="">
-      <Text className="text-2xl text-center">Criar Conta</Text>
-      <Text className="flex-roe  text-center">Preencha os dados abaixo </Text>
-      </View>
-      {/* Campos */}
+    <SafeAreaView className="flex-1 mt-8">
+      <View className="p-5 gap-2">
+        <View className="flex-row justify-center gap-2">
+          <Text className="text-2xl ">Criar</Text>
+          <Text className="text-2xl text-[#321abf]">Conta</Text>
+        </View>
+          <Text className="text-center gap-2">
+            Preencha os dados abaixo
+          </Text>
+        {/* Campos */}
         <View className="gap-6">
           {/* Nome */}
           <CampoTextoGenerico
@@ -121,8 +127,8 @@ const Cadastro = () => {
             placeholder="Nome"
             regex={regex_nome}
             isError={isErrorInNome}
-            />
-            {/* E-mail */}
+          />
+          {/* E-mail */}
           <CampoTextoGenerico
             className="bg-[#d9d9d9] rounded-2xl"
             icone={<MaterialIcons name="email" size={24} color="#321abf" />}
@@ -150,7 +156,9 @@ const Cadastro = () => {
           {/* Endereco */}
           <CampoTextoGenerico
             className="bg-[#d9d9d9] rounded-2xl"
-            icone={<FontAwesome6 name="map-location-dot" size={24} color="#321abf" />}
+            icone={
+              <FontAwesome6 name="map-location-dot" size={24} color="#321abf" />
+            }
             value={endereco}
             setValue={setEndereco}
             errorMessage="Digite um endereço válido"
@@ -173,9 +181,10 @@ const Cadastro = () => {
             </View>
           </Botao>
         </View>
-    </View>
-    <Footer/>
-</SafeAreaView>  );
+      </View>
+      <Footer />
+    </SafeAreaView>
+  );
 };
 
 export default Cadastro;
