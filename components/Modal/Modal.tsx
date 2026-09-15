@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Modal, Text, Pressable, View, TextInput } from 'react-native';
+import { Alert, Modal, Text, Pressable, View, TextInput, Platform  } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -102,36 +102,40 @@ async function cadastrar(idUsuario: string) {
   const formData = new FormData();
   formData.append('descricao', descricao);
   formData.append('id_usuario', idUsuario);
-    formData.append('nome', nome);
-    formData.append('tipoeletronico', tipoEletronico);
-    formData.append('modelo', modelo);
-    formData.append('telefone', telefone);
+  formData.append('nome', nome);
+  formData.append('tipoeletronico', tipoEletronico);
+  formData.append('modelo', modelo);
+  formData.append('telefone', telefone);
 
-    if (imagem) {
+  if (imagem) {
+    if (Platform.OS === 'web') {
+      const resposta = await fetch(imagem.uri);
+      const blob = await resposta.blob();
+      formData.append('imagem', blob, imagem.name);
+    } else {
       formData.append('imagem', {
         uri: imagem.uri,
         name: imagem.name,
         type: imagem.type,
-      } as unknown as Blob);
-    }
-
-    try {
-      
-      const resposta = await api.post('/cad_pedidos', formData);
-
-      if (resposta.status === 201 || resposta.status === 200) {
-        setOpenPedidoSucesso(true);
-        setModalVisible(false);
-        limpar();
-      } else {
-        Alert.alert('Erro ao cadastrar pedido');
-      }
-    } catch (error) {
-      setOpenPedidoErro(true);
-      console.log('Erro ao cadastrar:', error);
+      } as any);
     }
   }
 
+  try {
+    const resposta = await api.post('/cad_pedidos', formData);
+
+    if (resposta.status === 201 || resposta.status === 200) {
+      setOpenPedidoSucesso(true);
+      setModalVisible(false);
+      limpar();
+    } else {
+      Alert.alert('Erro ao cadastrar pedido');
+    }
+  } catch (error) {
+    setOpenPedidoErro(true);
+    console.log('Erro ao cadastrar:', error);
+  }
+}
   return (
     <SafeAreaView className="flex-1 items-center justify-center">
       <Modal
