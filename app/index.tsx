@@ -1,151 +1,70 @@
-import React, { useEffect, useState } from "react";
-
-import { View, Text, Alert } from "react-native";
-
-import "../global.css";
-
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Ionicons from "@expo/vector-icons/Ionicons";
-
-import CampoTextoGenerico from "@/components/CampoTexto/CampoTexto";
-
-import Header from "@/components/Header/Header";
+import { View, ImageBackground, Text, Image } from "react-native";
 import Botao from "@/components/botao/botao";
-import Footer from "@/components/Footer/footer";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
 
-import { BasicSignin } from "@/service/user.service";
-
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, useRouter } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-const App = () => {
-  const router = useRouter();
-  // Estados dos campos
-  const [email, setEmail] = useState<string>("");
-  const [senha, setSenha] = useState<string>("");
-
-  // Regex do e-mail
-  const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  // Estado de erro do e-mail
-  const [isErrorInEmail, setIsErrorInEmail] = useState<boolean>(false);
-
-  // Validação do e-mail
-  useEffect(() => {
-    if (email === "") {
-      setIsErrorInEmail(false);
-    } else {
-      if (!regex_email.test(email)) {
-        setIsErrorInEmail(true);
-      } else {
-        setIsErrorInEmail(false);
-      }
-    }
-  }, [email]);
-
-  // Regex da senha
-  const regex_senha = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-
-  // Estado de erro da senha
-  const [isErrorInSenha, setIsErrorInSenha] = useState<boolean>(false);
-
-  // Validação da senha
-  useEffect(() => {
-    if (senha === "") {
-      setIsErrorInSenha(false);
-    } else {
-      if (!regex_senha.test(senha)) {
-        setIsErrorInSenha(true);
-      } else {
-        setIsErrorInSenha(false);
-      }
-    }
-  }, [senha]);
-
-  // Função de login
-  const onSubmit = async (email: string, senha: string) => {
-  try {
-    const resposta = await BasicSignin(email, senha);
-
-    if (resposta && resposta.status === 200) {
-      await AsyncStorage.setItem('id', String(resposta.data.id_usuario));
-      router.navigate("/Home");
-    } else {
-      Alert.alert("Usuario ou senha incorretos");
-    }
-  } catch (error) {
-    console.error("Erro ao realizar login:", error);
-  }
-};
-
+import { router } from "expo-router";
+export default function Inicial() {
   return (
-    <SafeAreaView className="flex-1 bg-[#0007a0]">
-      <View className="flex-1 justify-center items-center bg-[#0007a0]">
-        {/* Título */}
-        <View className="justify-center items-center mt-8 mb-6">
-          <Text className="text-4xl text-white">Entrar</Text>
-
-          <Text className="text-xl text-white">Entre com sua conta</Text>
-        </View>
-
-        {/* Campos */}
-        <View className="gap-6">
-          {/* E-mail */}
-          <CampoTextoGenerico
-            className="bg-white rounded-lg"
-            icone={<FontAwesome name="user-circle" color="#321abf" size={24} />}
-            value={email}
-            setValue={setEmail}
-            errorMessage="Seu e-mail está inválido"
-            placeholder="E-mail"
-            regex={regex_email}
-            isError={isErrorInEmail}
-            keyboardType="email-address"
+    <View className="flex-1">
+      <ImageBackground
+        source={require("@/assets/images/fotofundo2.png")}
+        resizeMode="cover"
+        className="flex-1 justify-start items-start opacity-85"
+      >
+        <View className="flex flex-row justify-around items-center mt-6 w-full">
+          <Image
+            source={require("@/assets/images/logoTech.png")}
+            resizeMode="contain"
+            className="w-[100px] h-[100px] "
           />
-
-          {/* Senha */}
-          <CampoTextoGenerico
-            className="bg-white rounded-lg"
-            icone={<Ionicons name="lock-closed" color="#321abf" size={24} />}
-            value={senha}
-            setValue={setSenha}
-            errorMessage="Digite uma senha válida"
-            placeholder="Senha"
-            regex={regex_senha}
-            isError={isErrorInSenha}
-            secureTextEntry={true}
-          />
+          <Ionicons name="information-circle-outline" size={30} color="white" />
         </View>
+        <Text className="text-7xl text-white">TECH</Text>
 
-        {/* Botão */}
-        <View className="items-center mt-8">
-          <Botao
-            className="w-20"
-            disabled={
-              isErrorInEmail || isErrorInSenha || email === "" || senha === ""
-            }
-            onPress={() => onSubmit(email, senha)}
+        <MaskedView
+          maskElement={
+            <Text className="text-7xl">
+              COMPANY
+            </Text>
+          }
+        >
+          <LinearGradient
+            colors={["#9658F5", "#4B9BFF"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
           >
-            <View className="justify-center items-center">
+            <Text className="text-7xl opacity-0">COMPANY</Text>
+          </LinearGradient>
+        </MaskedView>
+
+        <Text className=" text-white">
+          Inovação, qualidade e tecnologia em produtos que transformam o seu dia
+          a dia.
+        </Text>
+
+        <View className="flex-row mt-96 gap-16 w-full justify-center">
+          <Botao
+            className="w-28 h-14 bg-[#010b6b] "
+            onPress={() => router.push("/Login")}
+          >
+            <View className="justify-center items-center flex-row gap-2">
+              <Ionicons name="log-in-outline" size={24} color="white" />
               <Text className="text-white text-xl">Entrar</Text>
             </View>
           </Botao>
+          <Botao
+            className="w-34 h-14 bg-transparent border-2 border-white p-2"
+            onPress={() => router.push("/Cadastro")}
+          >
+            <View className="justify-center items-center flex-row gap-1">
+              <Ionicons name="person-outline" size={20} color="white" />
+              <Text className="text-white text-xl">Cadastrar</Text>
+            </View>
+          </Botao>
         </View>
-
-        {/* Cadastro */}
-        <View className="flex-row items-center gap-2 ">
-          <Text className="text-white text-base mt-4">
-            Não possui cadastro?
-          </Text>
-        <Link href={"/Cadastro"} className=" text-white text-base underline pt-4">Cadastre-se</Link>
-        </View>
-      </View>
-
-      <Footer />
-    </SafeAreaView>
+      </ImageBackground>
+    </View>
   );
-};
-
-export default App;
+}
