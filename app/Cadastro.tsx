@@ -9,6 +9,7 @@ import Botao from "@/components/botao/botao";
 import { useRouter } from "expo-router";
 import { CreateAccount } from "@/service/user.service";
 import Footer from "@/components/Footer/footer";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 const Cadastro = () => {
@@ -102,16 +103,17 @@ const Cadastro = () => {
     };
   
   return (
-    <>
+    <SafeAreaView className="flex-1 mt-14">
     <View className="p-5 ">
-
+      <View className="">
       <Text className="text-2xl text-center">Criar Conta</Text>
       <Text className="flex-roe  text-center">Preencha os dados abaixo </Text>
+      </View>
       {/* Campos */}
         <View className="gap-6">
           {/* Nome */}
           <CampoTextoGenerico
-            className="bg-white rounded-lg"
+            className="bg-[#d9d9d9] rounded-2xl"
             icone={<FontAwesome name="user-circle" color="#321abf" size={24} />}
             value={nome}
             setValue={setNome}
@@ -122,7 +124,7 @@ const Cadastro = () => {
             />
             {/* E-mail */}
           <CampoTextoGenerico
-            className="bg-white rounded-lg"
+            className="bg-[#d9d9d9] rounded-2xl"
             icone={<MaterialIcons name="email" size={24} color="#321abf" />}
             value={email}
             setValue={setEmail}
@@ -135,7 +137,7 @@ const Cadastro = () => {
 
           {/* Senha */}
           <CampoTextoGenerico
-            className="bg-white rounded-lg"
+            className="bg-[#d9d9d9] rounded-2xl"
             icone={<Ionicons name="lock-closed" color="#321abf" size={24} />}
             value={senha}
             setValue={setSenha}
@@ -147,7 +149,7 @@ const Cadastro = () => {
           />
           {/* Endereco */}
           <CampoTextoGenerico
-            className="bg-white rounded-lg"
+            className="bg-[#d9d9d9] rounded-2xl"
             icone={<FontAwesome6 name="map-location-dot" size={24} color="#321abf" />}
             value={endereco}
             setValue={setEndereco}
@@ -160,7 +162,7 @@ const Cadastro = () => {
         {/* Botão */}
         <View className="items-center mt-8">
           <Botao
-            className="w-28 h-14"
+            className="w-28 h-14 bg-[#321abf]"
             disabled={
               isErrorInEmail || isErrorInSenha || email === "" || senha === ""
             }
@@ -173,8 +175,7 @@ const Cadastro = () => {
         </View>
     </View>
     <Footer/>
-    </>
-  );
+</SafeAreaView>  );
 };
 
 export default Cadastro;
