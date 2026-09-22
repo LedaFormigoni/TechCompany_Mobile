@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "expo-router/react-navigation";
+import { useNavigation } from 'expo-router/react-navigation';
 import api from "@/lib/axios.config";
 
 type ImagemType = {
