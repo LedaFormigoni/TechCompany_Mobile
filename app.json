@@ -36,7 +36,11 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ]
   }
 }
