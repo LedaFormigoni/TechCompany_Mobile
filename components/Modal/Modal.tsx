@@ -63,7 +63,7 @@ const ModalPublicarProblema = () => {
 
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images", // Passa a string direta em vez de acessar o objeto
-      quality: 0.7,
+      quality: 0.5,
     });
 
     if (!resultado.canceled && resultado.assets[0]) {
