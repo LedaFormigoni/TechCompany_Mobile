@@ -12,8 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from 'expo-router/react-navigation';
+import { useNavigation } from "expo-router/react-navigation";
 import api from "@/lib/axios.config";
+import { obterUserId } from "@/lib/secureStore";
+import SeletorDeImagem from "../SeletorDeImagem/SeletorDeImagem";
 
 type ImagemType = {
   uri: string;
@@ -25,7 +27,6 @@ const ModalPublicarProblema = () => {
   const navigation = useNavigation();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [imagem, setImagem] = useState<ImagemType | null>(null);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [modelo, setModelo] = useState("");
@@ -35,6 +36,11 @@ const ModalPublicarProblema = () => {
   const [openPedidoSucesso, setOpenPedidoSucesso] = useState(false);
   const [openPedidoErro, setOpenPedidoErro] = useState(false);
   const [idUsuario, setIdUsuario] = useState<string | null>(null);
+
+  const [imagem, setImagem] = useState<ImagePicker.ImagePickerAsset | null>(
+    null,
+  );
+  const [isImagemError, setIsImagemError] = useState<boolean>(false);
 
   function limpar() {
     setModelo("");
@@ -48,46 +54,13 @@ const ModalPublicarProblema = () => {
 
   useEffect(() => {
     async function carregarUsuario() {
-      const id = await AsyncStorage.getItem("id");
+      const id = await obterUserId();
       setIdUsuario(id);
     }
     carregarUsuario();
   }, []);
 
-  async function escolherImagem() {
-    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissao.granted) {
-      Alert.alert("Permissão negada para acessar a galeria.");
-      return;
-    }
-
-    const resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "images", // Passa a string direta em vez de acessar o objeto
-      quality: 0.5,
-    });
-
-    if (!resultado.canceled && resultado.assets[0]) {
-      const asset = resultado.assets[0];
-      const nomeArquivo =
-        asset.fileName || asset.uri.split("/").pop() || "foto.jpg";
-      const tipoMime = asset.mimeType || "image/jpeg";
-
-      setImagem({
-        uri: asset.uri,
-        name: nomeArquivo,
-        type: tipoMime,
-      });
-    }
-  }
-
   async function validar() {
-    const id = await AsyncStorage.getItem("id");
-
-    if (!id) {
-      setMsg("Usuario não cadastrado. Faça login novamente.");
-      return;
-    }
-
     if (
       !nome.trim() ||
       !descricao.trim() ||
@@ -100,30 +73,24 @@ const ModalPublicarProblema = () => {
       return;
     }
 
-    cadastrar(id);
+    cadastrar();
   }
 
-  async function cadastrar(idUsuario: string) {
+  async function cadastrar() {
     const formData = new FormData();
     formData.append("descricao", descricao);
-    formData.append("id_usuario", idUsuario);
+    formData.append("id_usuario", idUsuario!);
     formData.append("nome", nome);
     formData.append("tipoeletronico", tipoEletronico);
     formData.append("modelo", modelo);
     formData.append("telefone", telefone);
 
     if (imagem) {
-      if (Platform.OS === "web") {
-        const resposta = await fetch(imagem.uri);
-        const blob = await resposta.blob();
-        formData.append("imagem", blob, imagem.name);
-      } else {
-        formData.append("imagem", {
-          uri: imagem.uri,
-          name: imagem.name,
-          type: imagem.type,
-        } as any);
-      }
+      formData.append("imagem", {
+        uri: imagem.uri,
+        name: imagem.fileName ?? "imagem.jpg",
+        type: imagem.mimeType ?? "image/jpeg",
+      } as unknown as Blob);
     }
 
     try {
@@ -205,16 +172,12 @@ const ModalPublicarProblema = () => {
               <Picker.Item label="Computador" value="computador" />
               <Picker.Item label="Console" value="console" />
             </Picker>
-
-            <Pressable
-              onPress={escolherImagem}
-              className="mb-4 rounded-lg border border-gray-300 p-3"
-            >
-              <Text className="text-center text-gray-700">
-                {imagem ? "Imagem selecionada ✓" : "Selecionar imagem"}
-              </Text>
-            </Pressable>
-
+            <SeletorDeImagem
+              label="Selecione uma imagem"
+              value={imagem}
+              setValue={setImagem}
+              isError={isImagemError}
+            />
             {msg !== "" && (
               <Text className="mb-2 text-center text-red-600 font-semibold">
                 {msg}
