@@ -1,4 +1,5 @@
 import api from "@/lib/axios.config";
+import { obterUserId } from "@/lib/secureStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
@@ -14,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SeletorDeImagem from "../SeletorDeImagem/SeletorDeImagem";
 
 type ImagemType = {
   uri: string;

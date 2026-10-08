@@ -131,12 +131,13 @@ const App = () => {
 
         {/* Cadastro */}
         <View className="flex-row items-center gap-2 ">
-          <Text className="text-white text-base mt-4">
+          <Text className="text-white text-base mt-1">
             Não possui cadastro?
           </Text>
           <Link
             href={"/Cadastro"}
-            className=" text-white text-base underline pt-4"
+            className=" text-white text-base"
+            style={{ textDecorationLine: "underline"}}
           >
             Cadastre-se
           </Link>

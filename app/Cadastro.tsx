@@ -6,7 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Botao from "@/components/botao/botao";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { CreateAccount } from "@/service/user.service";
 import Footer from "@/components/Footer/footer";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -112,9 +112,7 @@ const Cadastro = () => {
           <Text className="text-2xl ">Criar</Text>
           <Text className="text-2xl text-[#321abf]">Conta</Text>
         </View>
-          <Text className="text-center gap-2">
-            Preencha os dados abaixo
-          </Text>
+        <Text className="text-center gap-2">Preencha os dados abaixo</Text>
         {/* Campos */}
         <View className="gap-6">
           {/* Nome */}
@@ -168,7 +166,7 @@ const Cadastro = () => {
         </View>
 
         {/* Botão */}
-        <View className="items-center mt-8">
+        <View className="items-center ">
           <Botao
             className="w-28 h-14 bg-[#321abf]"
             disabled={
@@ -180,6 +178,16 @@ const Cadastro = () => {
               <Text className="text-white text-xl">Cadastrar</Text>
             </View>
           </Botao>
+        </View>
+        <View className="flex-row justify-center gap-2">
+          <Text className="text-black">Já possui uma conta?</Text>
+          <Link
+            href="/Login"
+            className=" text-base"
+            style={{ textDecorationLine: "underline", color: "#321abf" }}
+          >
+            Entrar
+          </Link>
         </View>
       </View>
       <Footer />
