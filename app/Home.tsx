@@ -51,6 +51,8 @@ const Home = () => {
         <Text className="mb-6 text-center text-2xl font-semibold text-[#0d1aa6]">
           Conserto de Eletrônicos
         </Text>
+        <Botao
+          className="w-20"
 
         {carregando ? (
           <ActivityIndicator size="large" color="#0d1aa6" />
