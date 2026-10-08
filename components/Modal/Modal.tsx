@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
+import api from "@/lib/axios.config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "expo-router/react-navigation";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Modal,
-  Text,
-  Pressable,
-  View,
-  TextInput,
   Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Picker } from "@react-native-picker/picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "expo-router/react-navigation";
-import api from "@/lib/axios.config";
-import { obterUserId } from "@/lib/secureStore";
-import SeletorDeImagem from "../SeletorDeImagem/SeletorDeImagem";
 
 type ImagemType = {
   uri: string;
@@ -59,6 +57,32 @@ const ModalPublicarProblema = () => {
     }
     carregarUsuario();
   }, []);
+
+  async function escolherImagem() {
+    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissao.granted) {
+      Alert.alert("Permissão negada para acessar a galeria.");
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: "images", // Passa a string direta em vez de acessar o objeto
+      quality: 0.8,
+    });
+
+    if (!resultado.canceled && resultado.assets[0]) {
+      const asset = resultado.assets[0];
+      const nomeArquivo =
+        asset.fileName || asset.uri.split("/").pop() || "foto.jpg";
+      const tipoMime = asset.mimeType || "image/jpeg";
+
+      setImagem({
+        uri: asset.uri,
+        name: nomeArquivo,
+        type: tipoMime,
+      });
+    }
+  }
 
   async function validar() {
     if (

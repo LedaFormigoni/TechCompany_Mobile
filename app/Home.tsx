@@ -1,17 +1,15 @@
+import Botao from "@/components/botao/botao";
 import CartaoDePostagem, {
   Postagem,
 } from "@/components/CartaoDePostagem/CartaoDePostagem";
 import ModalPublicarProblema from "@/components/Modal/Modal";
-import api from "@/lib/axios.config";
 import "@/global.css";
-
-import { router, useFocusEffect } from "expo-router";
-import React, { useCallback, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import api from "@/lib/axios.config";
 import { removerUserId } from "@/lib/secureStore";
-import Botao from "@/components/botao/botao";
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 const Home = () => {
   const [postagens, setPostagens] = useState<Postagem[]>([]);
   const [carregando, setCarregando] = useState(true);
@@ -41,9 +39,6 @@ const Home = () => {
   return (
     <View className="flex-1 bg-[#f4f7f9]">
       <View className="w-full flex-1 self-center px-4 py-6">
-        <Text className="mb-6 text-center text-2xl font-semibold text-[#0d1aa6]">
-          Conserto de Eletrônicos
-        </Text>
         <Botao
           className="w-20"
 
@@ -53,6 +48,11 @@ const Home = () => {
             <SimpleLineIcons name="logout" size={24} color="black" />
           </View>
         </Botao>
+        <Text className="mb-6 text-center text-2xl font-semibold text-[#0d1aa6]">
+          Conserto de Eletrônicos
+        </Text>
+        <Botao
+          className="w-20"
 
         {carregando ? (
           <ActivityIndicator size="large" color="#0d1aa6" />

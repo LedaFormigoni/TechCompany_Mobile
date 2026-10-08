@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import Header from "../components/Header/Header"
+import Header from "../components/Header/Header";
 export default function RootLayout() {
   return (
     <Stack screenOptions={{ header: Header }}>
@@ -9,6 +9,7 @@ export default function RootLayout() {
       <Stack.Screen name="Home" />
       <Stack.Screen name="Cadastro" />
       <Stack.Screen name="Login" />
+      <Stack.Screen name="problems/[id]" />
     </Stack>
   );
 }
