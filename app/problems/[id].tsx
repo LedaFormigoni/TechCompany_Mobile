@@ -1,10 +1,18 @@
 import { Postagem } from "@/components/CartaoDePostagem/CartaoDePostagem";
 import api from "@/lib/axios.config";
 import { bytesToBase64 } from "@/lib/base64";
+import { obterUserId } from "@/lib/secureStore";
 import { Image } from "expo-image";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
 type PostagemDetail = Postagem & {
   descricao: string;
@@ -18,9 +26,15 @@ type PostagemDetail = Postagem & {
 
 const PostDetailsPage = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
 
   const [postagem, setPostagem] = useState<PostagemDetail | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [idUsuario, setIdUsuario] = useState<string | null>(null);
+
+  useEffect(() => {
+    obterUserId().then(setIdUsuario);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -41,6 +55,28 @@ const PostDetailsPage = () => {
     }, [id]),
   );
 
+  function confirmarDelete() {
+    Alert.alert("Apagar pedido", "Tem certeza que deseja apagar?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Apagar",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await api.delete(`/deletar_pedido/${id}`, {
+              params: { id_usuario: idUsuario },
+            });
+
+            router.back();
+          } catch (error) {
+            console.log("Erro ao apagar:", error);
+            Alert.alert("Erro", "Não foi possível apagar o pedido");
+          }
+        },
+      },
+    ]);
+  }
+
   if (carregando) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F5F7FA]">
@@ -59,6 +95,9 @@ const PostDetailsPage = () => {
     );
   }
 
+  const ehDono = String(postagem.id_usuarios) === String(idUsuario);
+
+  console.log("dono do pedido:", postagem.id_usuarios, "| logado:", idUsuario);
   return (
     <ScrollView
       className="flex-1 bg-[#F5F7FA]"
@@ -154,6 +193,16 @@ const PostDetailsPage = () => {
             </View>
           </View>
         </View>
+
+        {/* BOTÃO APAGAR (SÓ PARA O DONO) */}
+        {ehDono && (
+          <Pressable
+            onPress={confirmarDelete}
+            className="mb-4 items-center rounded-2xl bg-red-600 p-4"
+          >
+            <Text className="font-bold text-white">Apagar pedido</Text>
+          </Pressable>
+        )}
       </View>
     </ScrollView>
   );
