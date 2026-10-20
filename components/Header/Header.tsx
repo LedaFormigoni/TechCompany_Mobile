@@ -1,4 +1,4 @@
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { NativeStackHeaderProps } from "expo-router/build/react-navigation/native-stack/types";
 import Feather from "@expo/vector-icons/Feather";
 import React, { useState } from "react";
 import { Image, Pressable, View, Text } from "react-native";
