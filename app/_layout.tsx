@@ -9,6 +9,11 @@ export default function RootLayout() {
       <Stack.Screen name="Home" />
       <Stack.Screen name="Cadastro" />
       <Stack.Screen name="Login" />
+<<<<<<< Updated upstream
+=======
+      <Stack.Screen name="Perfil" />
+      <Stack.Screen name="problems/[id]" />
+>>>>>>> Stashed changes
     </Stack>
   );
 }
