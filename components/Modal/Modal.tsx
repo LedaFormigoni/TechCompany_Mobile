@@ -1,16 +1,19 @@
+
 import api from "@/lib/axios.config";
 import { obterUserId } from "@/lib/secureStore";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "expo-router/react-navigation";
 import { useEffect, useState } from "react";
+
 import {
   Alert,
   Modal,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SeletorDeImagem from "../SeletorDeImagem/SeletorDeImagem";
@@ -35,9 +38,9 @@ const ModalPublicarProblema = () => {
   const [openPedidoErro, setOpenPedidoErro] = useState(false);
   const [idUsuario, setIdUsuario] = useState<string | null>(null);
 
-  const [imagem, setImagem] = useState<ImagePicker.ImagePickerAsset | null>(
-    null,
-  );
+  const [imagem, setImagem] =
+    useState<ImagePicker.ImagePickerAsset | null>(null);
+
   const [isImagemError, setIsImagemError] = useState<boolean>(false);
 
   function limpar() {
@@ -55,6 +58,7 @@ const ModalPublicarProblema = () => {
       const id = await obterUserId();
       setIdUsuario(id);
     }
+
     carregarUsuario();
   }, []);
 
@@ -76,6 +80,7 @@ const ModalPublicarProblema = () => {
 
   async function cadastrar() {
     const formData = new FormData();
+
     formData.append("descricao", descricao);
     formData.append("id_usuario", idUsuario!);
     formData.append("nome", nome);
@@ -106,6 +111,7 @@ const ModalPublicarProblema = () => {
       console.log("Erro ao cadastrar:", error);
     }
   }
+
   return (
     <SafeAreaView className="flex-1 items-center justify-center">
       <Modal
@@ -114,85 +120,122 @@ const ModalPublicarProblema = () => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 items-center justify-center bg-black/40">
+        <View className="flex-1 items-center justify-center bg-black/40 p-4">
           <View className="elevation-5 max-h-[85%] w-full max-w-md rounded-[20px] bg-white p-6 shadow-lg">
-            <Text className="mb-4 text-center font-bold text-lg">
+
+            <Text className="mb-4 text-center text-lg font-bold">
               Publicar Problema
             </Text>
 
-            <Text className="mb-1 font-medium text-gray-700">Nome:</Text>
-            <TextInput
-              value={nome}
-              onChangeText={setNome}
-              placeholder="Digite seu nome completo"
-              placeholderTextColor="#9ca3af"
-              className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
-            />
-
-            <Text className="mb-1 font-medium text-gray-700">Descrição:</Text>
-            <TextInput
-              value={descricao}
-              onChangeText={setDescricao}
-              placeholder="Descreva o problema"
-              placeholderTextColor="#9ca3af"
-              multiline
-              numberOfLines={3}
-              className="textAlignVertical-top mb-4 h-20 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
-            />
-
-            <Text className="mb-1 font-medium text-gray-700">Modelo:</Text>
-            <TextInput
-              value={modelo}
-              onChangeText={setModelo}
-              placeholder="Digite o modelo do aparelho"
-              placeholderTextColor="#9ca3af"
-              className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
-            />
-
-            <Text className="mb-1 font-medium text-gray-700">Telefone:</Text>
-            <TextInput
-              value={telefone}
-              onChangeText={setTelefone}
-              placeholder="Digite o número de telefone"
-              placeholderTextColor="#9ca3af"
-              keyboardType="phone-pad"
-              className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
-            />
-
-            <Text className="mb-1 font-medium text-gray-700">
-              Tipo de Eletrônicos:
-            </Text>
-            <Picker
-              selectedValue={tipoEletronico}
-              onValueChange={(itemValue) => setTipoEletronico(itemValue)}
+            {/* Campos com rolagem */}
+            <ScrollView
+              className="shrink"
+              showsVerticalScrollIndicator={true}
+              keyboardShouldPersistTaps="handled"
             >
-              <Picker.Item label="Smartphone" value="smartphone" />
-              <Picker.Item label="Computador" value="computador" />
-              <Picker.Item label="Console" value="console" />
-            </Picker>
-            <SeletorDeImagem
-              label="Selecione uma imagem"
-              value={imagem}
-              setValue={setImagem}
-              isError={isImagemError}
-            />
-            {msg !== "" && (
-              <Text className="mb-2 text-center text-red-600 font-semibold">
-                {msg}
+              <Text className="mb-1 font-medium text-gray-700">
+                Nome:
               </Text>
-            )}
 
-            <View className="flex-row justify-center">
+              <TextInput
+                value={nome}
+                onChangeText={setNome}
+                placeholder="Digite seu nome completo"
+                placeholderTextColor="#9ca3af"
+                className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
+              />
+
+              <Text className="mb-1 font-medium text-gray-700">
+                Descrição:
+              </Text>
+
+              <TextInput
+                value={descricao}
+                onChangeText={setDescricao}
+                placeholder="Descreva o problema"
+                placeholderTextColor="#9ca3af"
+                multiline
+                numberOfLines={3}
+                className="mb-4 h-20 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
+                style={{ textAlignVertical: "top" }}
+              />
+
+              <Text className="mb-1 font-medium text-gray-700">
+                Modelo:
+              </Text>
+
+              <TextInput
+                value={modelo}
+                onChangeText={setModelo}
+                placeholder="Digite o modelo do aparelho"
+                placeholderTextColor="#9ca3af"
+                className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
+              />
+
+              <Text className="mb-1 font-medium text-gray-700">
+                Telefone:
+              </Text>
+
+              <TextInput
+                value={telefone}
+                onChangeText={setTelefone}
+                placeholder="Digite o número de telefone"
+                placeholderTextColor="#9ca3af"
+                keyboardType="phone-pad"
+                className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
+              />
+
+              <Text className="mb-1 font-medium text-gray-700">
+                Tipo de Eletrônicos:
+              </Text>
+
+              <Picker
+                selectedValue={tipoEletronico}
+                onValueChange={(itemValue) =>
+                  setTipoEletronico(itemValue)
+                }
+              >
+                <Picker.Item
+                  label="Smartphone"
+                  value="smartphone"
+                />
+                <Picker.Item
+                  label="Computador"
+                  value="computador"
+                />
+                <Picker.Item
+                  label="Console"
+                  value="console"
+                />
+              </Picker>
+
+              <SeletorDeImagem
+                label="Selecione uma imagem"
+                value={imagem}
+                setValue={setImagem}
+                isError={isImagemError}
+              />
+
+              {msg !== "" && (
+                <Text className="mb-2 text-center font-semibold text-red-600">
+                  {msg}
+                </Text>
+              )}
+            </ScrollView>
+
+            {/* Botões dentro da View branca */}
+            <View className="mt-3 flex-row justify-center">
               <Pressable
-                className="elevation-2 m-4 rounded-2xl bg-[#2196F3] p-5"
+                className="elevation-2 m-2 rounded-2xl bg-[#2196F3] px-5 py-4"
                 onPress={validar}
               >
                 <Text className="text-center font-bold text-white">
                   Publicar
                 </Text>
               </Pressable>
+
               <Pressable
-                className="elevation-2 m-4 rounded-2xl bg-[#2196F3] p-5"
+                className="elevation-2 m-2 rounded-2xl bg-[#2196F3] px-5 py-4"
                 onPress={() => setModalVisible(false)}
               >
                 <Text className="text-center font-bold text-white">
@@ -200,6 +243,7 @@ const ModalPublicarProblema = () => {
                 </Text>
               </Pressable>
             </View>
+
           </View>
         </View>
       </Modal>
@@ -208,7 +252,9 @@ const ModalPublicarProblema = () => {
         onPress={() => setModalVisible(true)}
         className="mb-10 rounded-[10px] bg-[#0d1aa6] px-5 py-6"
       >
-        <Text className="font-semibold text-white"> + </Text>
+        <Text className="font-semibold text-white">
+          +
+        </Text>
       </Pressable>
     </SafeAreaView>
   );
