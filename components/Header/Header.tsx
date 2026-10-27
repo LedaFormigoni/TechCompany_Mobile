@@ -27,10 +27,7 @@ const Header = (props: NativeStackHeaderProps) => {
       {/* HEADER */}
       <SafeAreaView className="px-6 pt-2 bg-[#00007a] flex-row items-center justify-between">
         {/* SETA DE VOLTAR */}
-        {podeVoltar &&
-        pathname !== "/Home" &&
-        pathname !== "/Login" &&
-        pathname !== "/Cadastro" ? (
+        {podeVoltar && pathname !== "/Home" ? (
           <Pressable onPress={() => props.navigation.goBack()}>
             <Feather name="arrow-left" size={24} color="white" />
           </Pressable>
@@ -62,17 +59,19 @@ const Header = (props: NativeStackHeaderProps) => {
       {menuAberto && !esconderMenu && (
         <View className="absolute right-0 top-24 w-64 bg-white rounded-bl-2xl shadow-lg z-50">
           {/* PERFIL */}
-          <Pressable
-            onPress={() => {
-              setMenuAberto(false);
-              router.push("/Perfil");
-            }}
-            className="flex-row items-center p-5 border-b border-gray-200"
-          >
-            <Feather name="user" size={22} color="#00007a" />
+          {pathname !== "/Perfil" && (
+            <Pressable
+              onPress={() => {
+                setMenuAberto(false);
+                router.push("/Perfil");
+              }}
+              className="flex-row items-center p-5 border-b border-gray-200"
+            >
+              <Feather name="user" size={22} color="#00007a" />
 
-            <Text className="ml-4 text-lg text-gray-800">Perfil</Text>
-          </Pressable>
+              <Text className="ml-4 text-lg text-gray-800">Perfil</Text>
+            </Pressable>
+          )}
 
           {/* SOBRE NÓS */}
           {pathname !== "/Sobrenos" && (
