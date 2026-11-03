@@ -42,16 +42,13 @@ const CartaoDePostagem = ({ postagem }: CartaoDePostagemProps) => {
           accessibilityLabel={`Imagem do aparelho de ${postagem.nome}`}
         /> */}
 
-        {/* CONTEÚDO */}
         <View className="p-5">
-          {/* TIPO DE ELETRÔNICO */}
           <View className="mb-3 self-start rounded-full bg-[#e3e8ff] px-3 py-1.5">
             <Text className="text-xs font-bold text-[#0d1aa6]">
               {postagem.tipoeletronico}
             </Text>
           </View>
 
-          {/* NOME */}
           <Text
             className="mb-1 text-xl font-bold text-[#222]"
             numberOfLines={2}
