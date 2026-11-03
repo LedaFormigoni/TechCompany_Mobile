@@ -1,11 +1,10 @@
-
 import api from "@/lib/axios.config";
 import { obterUserId } from "@/lib/secureStore";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "expo-router/react-navigation";
 import { useEffect, useState } from "react";
 
+import { FecthPostagens } from "@/lib/utils";
 import {
   Alert,
   Modal,
@@ -16,17 +15,16 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Postagem } from "../CartaoDePostagem/CartaoDePostagem";
 import SeletorDeImagem from "../SeletorDeImagem/SeletorDeImagem";
 
-type ImagemType = {
-  uri: string;
-  name: string;
-  type: string;
+type Props = {
+  // Função da tela da lista que recarrega os pedidos.
+  // Será chamada logo depois que o pedido for publicado com sucesso.
+  aoPublicar: React.Dispatch<React.SetStateAction<Postagem[]>>;
 };
 
-const ModalPublicarProblema = () => {
-  const navigation = useNavigation();
-
+const ModalPublicarProblema = ({ aoPublicar }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -38,8 +36,9 @@ const ModalPublicarProblema = () => {
   const [openPedidoErro, setOpenPedidoErro] = useState(false);
   const [idUsuario, setIdUsuario] = useState<string | null>(null);
 
-  const [imagem, setImagem] =
-    useState<ImagePicker.ImagePickerAsset | null>(null);
+  const [imagem, setImagem] = useState<ImagePicker.ImagePickerAsset | null>(
+    null,
+  );
 
   const [isImagemError, setIsImagemError] = useState<boolean>(false);
 
@@ -62,7 +61,7 @@ const ModalPublicarProblema = () => {
     carregarUsuario();
   }, []);
 
-  async function validar() {
+  function validar() {
     if (
       !nome.trim() ||
       !descricao.trim() ||
@@ -79,10 +78,15 @@ const ModalPublicarProblema = () => {
   }
 
   async function cadastrar() {
+    if (!idUsuario) {
+      Alert.alert("Erro", "Usuário não identificado. Faça login novamente.");
+      return;
+    }
+
     const formData = new FormData();
 
     formData.append("descricao", descricao);
-    formData.append("id_usuario", idUsuario!);
+    formData.append("id_usuario", idUsuario);
     formData.append("nome", nome);
     formData.append("tipoeletronico", tipoEletronico);
     formData.append("modelo", modelo);
@@ -100,9 +104,19 @@ const ModalPublicarProblema = () => {
       const resposta = await api.post("/cad_pedidos", formData);
 
       if (resposta.status === 201 || resposta.status === 200) {
+        const data = await FecthPostagens();
+        aoPublicar(data);
+
         setOpenPedidoSucesso(true);
         setModalVisible(false);
         limpar();
+
+        // Avisa a tela da lista para buscar os pedidos de novo.
+        // Se a busca falhar, não deve parecer que a publicação falhou.
+        try {
+        } catch (error) {
+          console.log("Erro ao atualizar a lista:", error);
+        }
       } else {
         Alert.alert("Erro ao cadastrar pedido");
       }
@@ -122,20 +136,16 @@ const ModalPublicarProblema = () => {
       >
         <View className="flex-1 items-center justify-center bg-black/40 p-4">
           <View className="elevation-5 max-h-[85%] w-full max-w-md rounded-[20px] bg-white p-6 shadow-lg">
-
             <Text className="mb-4 text-center text-lg font-bold">
               Publicar Problema
             </Text>
 
-            {/* Campos com rolagem */}
             <ScrollView
               className="shrink"
               showsVerticalScrollIndicator={true}
               keyboardShouldPersistTaps="handled"
             >
-              <Text className="mb-1 font-medium text-gray-700">
-                Nome:
-              </Text>
+              <Text className="mb-1 font-medium text-gray-700">Nome:</Text>
 
               <TextInput
                 value={nome}
@@ -145,9 +155,7 @@ const ModalPublicarProblema = () => {
                 className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
               />
 
-              <Text className="mb-1 font-medium text-gray-700">
-                Descrição:
-              </Text>
+              <Text className="mb-1 font-medium text-gray-700">Descrição:</Text>
 
               <TextInput
                 value={descricao}
@@ -160,9 +168,7 @@ const ModalPublicarProblema = () => {
                 style={{ textAlignVertical: "top" }}
               />
 
-              <Text className="mb-1 font-medium text-gray-700">
-                Modelo:
-              </Text>
+              <Text className="mb-1 font-medium text-gray-700">Modelo:</Text>
 
               <TextInput
                 value={modelo}
@@ -172,9 +178,7 @@ const ModalPublicarProblema = () => {
                 className="mb-4 w-full rounded-lg border border-gray-300 bg-white p-3 text-base text-gray-900"
               />
 
-              <Text className="mb-1 font-medium text-gray-700">
-                Telefone:
-              </Text>
+              <Text className="mb-1 font-medium text-gray-700">Telefone:</Text>
 
               <TextInput
                 value={telefone}
@@ -191,22 +195,11 @@ const ModalPublicarProblema = () => {
 
               <Picker
                 selectedValue={tipoEletronico}
-                onValueChange={(itemValue) =>
-                  setTipoEletronico(itemValue)
-                }
+                onValueChange={(itemValue) => setTipoEletronico(itemValue)}
               >
-                <Picker.Item
-                  label="Smartphone"
-                  value="smartphone"
-                />
-                <Picker.Item
-                  label="Computador"
-                  value="computador"
-                />
-                <Picker.Item
-                  label="Console"
-                  value="console"
-                />
+                <Picker.Item label="Smartphone" value="smartphone" />
+                <Picker.Item label="Computador" value="computador" />
+                <Picker.Item label="Console" value="console" />
               </Picker>
 
               <SeletorDeImagem
@@ -243,7 +236,6 @@ const ModalPublicarProblema = () => {
                 </Text>
               </Pressable>
             </View>
-
           </View>
         </View>
       </Modal>
@@ -252,9 +244,7 @@ const ModalPublicarProblema = () => {
         onPress={() => setModalVisible(true)}
         className="mb-10 rounded-[10px] bg-[#0d1aa6] px-5 py-6"
       >
-        <Text className="font-semibold text-white">
-          +
-        </Text>
+        <Text className="font-semibold text-white">+</Text>
       </Pressable>
     </SafeAreaView>
   );
